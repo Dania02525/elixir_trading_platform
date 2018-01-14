@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="http://techanjs.org/techan.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <main role="main">
+        <%= render @view_module, @view_template, assigns %>
+      </main>
+
+    </div> <!-- /container -->
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script>window.userToken = "<%= assigns[:user_token] %>";</script>
+  </body>
+</html>
