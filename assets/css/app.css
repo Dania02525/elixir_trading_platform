@@ -1,1 +1,51 @@
 /* This file is for your main application css. */
+path.candle {
+    stroke: grey;
+}
+
+path.candle.body {
+    stroke-width: 0;
+}
+
+path.candle.up {
+    fill: #00AA00;
+    stroke: #00AA00;
+}
+
+path.candle.down {
+    fill: #FF0000;
+    stroke: #FF0000;
+}
+
+.axis line {
+  stroke: grey;
+}
+
+.axis path {
+  stroke: grey;
+}
+
+.axis text {
+  stroke: grey;
+}
+
+body {
+  padding-top: 75px;
+}
+
+table {
+  background-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+table.table th, .table td {
+  padding: 0.5em !important;
+}
+
+.price-box-balance {
+  font-size: 1.1em;
+  padding: 8px 0px 8px;
+}
+
+.orders tr.table-active {
+  background-color: rgba(0, 170, 0, 0.33);
+}

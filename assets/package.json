@@ -7,7 +7,10 @@
   },
   "dependencies": {
     "phoenix": "file:../deps/phoenix",
-    "phoenix_html": "file:../deps/phoenix_html"
+    "phoenix_html": "file:../deps/phoenix_html",
+    "jquery": "3.2.1",
+    "popper.js": "1.12.9",
+    "bootstrap": "4.0.0-beta.3"
   },
   "devDependencies": {
     "babel-brunch": "6.1.1",

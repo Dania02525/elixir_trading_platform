@@ -13,13 +13,9 @@
   </head>
 
   <body>
-    <div class="container">
-
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
+    <main role="main">
+      <%= render @view_module, @view_template, assigns %>
+    </main>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
   </body>

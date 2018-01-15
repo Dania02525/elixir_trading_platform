@@ -7,7 +7,8 @@ use Mix.Config
 
 # General application configuration
 config :elixir_exchange,
-  ecto_repos: [ElixirExchange.Repo]
+  ecto_repos: [ElixirExchange.Repo],
+  pairs: ["xrb:xlm"]
 
 # Configures the endpoint
 config :elixir_exchange, ElixirExchangeWeb.Endpoint,

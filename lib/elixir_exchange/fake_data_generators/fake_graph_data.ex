@@ -1,8 +1,4 @@
-defmodule ElixirExchange.GraphData do
-  def init(pair) do
-    ElixirExchange.TradeHistoryCache.get_history(pair)
-  end
-
+defmodule ElixirExchange.FakeGraphData do
   # this would be produced from the filled orders in the database,
   # and cached in the agent process
   def gen_fake_history(count) do
@@ -11,9 +7,11 @@ defmodule ElixirExchange.GraphData do
 
   def gen_forward_datapoint(prev) do
     new_open = random_move(prev.open, random_sign())
+    new_date = DateTime.utc_now()
 
     %{
-      date: DateTime.utc_now(),
+      date: new_date,
+      iso_date: DateTime.to_iso8601(new_date),
       open: new_open,
       high: random_move(new_open, 1),
       low: random_move(new_open, -1),
@@ -23,10 +21,12 @@ defmodule ElixirExchange.GraphData do
   end
 
   def gen_fake_datapoint(previous) do
+    current_date = DateTime.utc_now()
     prev =
       if is_nil(previous) do
          %{
-          date: DateTime.utc_now(),
+          date: current_date,
+          iso_date: DateTime.to_iso8601(current_date),
           open: 0.02322,
           high: 0.02442,
           low: 0.02134,
@@ -38,9 +38,11 @@ defmodule ElixirExchange.GraphData do
       end
 
     new_open = random_move(prev.open, random_sign())
+    new_date = shift_time(prev.date, -5)
 
     %{
-      date: shift_time(prev.date, -5),
+      date: new_date,
+      iso_date:  DateTime.to_iso8601(new_date),
       open: new_open,
       high: random_move(new_open, 1),
       low: random_move(new_open, -1),

@@ -57,6 +57,12 @@ exports.config = {
   },
 
   npm: {
-    enabled: true
+    enabled: true,
+    globals: {
+      $: 'jquery',
+      jQuery: 'jquery',
+      Popper: 'popper.js',
+      bootstrap: 'bootstrap'
+    }
   }
 };

@@ -35,10 +35,8 @@ channel.join()
 
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 960 - margin.left - margin.right,
+        width = 1100 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
-
-var parseDate = d3.timeParse("%d-%b-%y");
 
 var x = techan.scale.financetime()
         .range([0, width]);
@@ -56,7 +54,7 @@ var xAxis = d3.axisBottom()
 var yAxis = d3.axisLeft()
         .scale(y);
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#graph-placeholder").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -67,7 +65,7 @@ var data = [];
 channel.on("update", payload => {
   data.shift();
   data.push({
-    date: d3.isoParse(payload.data.date),
+    date: d3.isoParse(payload.data.iso_date),
     open: payload.data.open,
     high: payload.data.high,
     low: payload.data.low,
@@ -80,7 +78,7 @@ channel.on("update", payload => {
 channel.on("init", payload => {
   data = payload.data.map(function(d) {
       return {
-          date: d3.isoParse(d.date),
+          date: d3.isoParse(d.iso_date),
           volume: d.volume,
           open: d.open,
           high: d.high,
@@ -103,85 +101,10 @@ channel.on("init", payload => {
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
-          .text("Price ($)");
+          .text("Amount");
 
   draw();
 })
-
-
-function initData() {
-    var i;
-    for(i=0;i<199;i++) {
-        data.push(generateDatum())
-    }
-
-    svg.append("g")
-            .attr("class", "candlestick");
-
-    svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")");
-
-    svg.append("g")
-            .attr("class", "y axis")
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Price ($)");
-
-    draw();
-}
-
-function beginFeedData() {
-    setInterval(function() {
-        data.shift();
-        data.push(generateDatum());
-        console.log(data);
-        draw()
-    }, 5000)
-}
-
-function generateDatum() {
-    if(data.length === 0) {
-        return {
-            date: new Date(),
-            open: 40.9,
-            high: 41.94,
-            low: 40.62,
-            close: 41.34,
-            volume: 94162358
-        }
-    }
-    var prevData = data[data.length-1]
-    var prevTime = prevData.Date;
-    var newOpen = randomPriceFrom(prevData.open, randomSign());
-    var newHigh = randomPriceFrom(newOpen, 1);
-    var newLow = randomPriceFrom(newOpen, -1);
-
-    return {
-            date: addMinutes(prevData.date, 5),
-            open: newOpen,
-            high: newHigh,
-            low: newLow,
-            close: randomPriceFrom(newOpen, randomSign()),
-            volume: prevData.volume
-        }
-}
-
-function addMinutes(date, minutes) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes() + minutes)
-}
-
-function randomSign() {
-    return (Math.random() < 0.5) ? -1 : 1;
-}
-
-function randomPriceFrom(float, sign) {
-    var pct = (((Math.random() * 10) + 1) / 100) * sign;
-    return float * (1 + pct);
-}
 
 function draw() {
     x.domain(data.map(candlestick.accessor().d));
@@ -191,3 +114,16 @@ function draw() {
     svg.selectAll("g.x.axis").call(xAxis);
     svg.selectAll("g.y.axis").call(yAxis);
 }
+
+function choosePair(pair) {
+  channel = socket.channel("trading:" + pair, {});
+}
+
+$( ".pairSelector" ).click(function(e) {
+  console.log(e.target.id);
+  channel = socket.channel("trading:" + e.target.id, {});
+
+  channel.join()
+    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("error", resp => { console.log("Unable to join", resp) })
+});

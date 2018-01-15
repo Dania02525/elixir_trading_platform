@@ -12,9 +12,17 @@ defmodule ElixirExchange.Application do
       supervisor(ElixirExchange.Repo, []),
       # Start the endpoint when the application starts
       supervisor(ElixirExchangeWeb.Endpoint, []),
-      worker(ElixirExchange.TradeHistoryCache, []),
-      # Start your own worker by calling: ElixirExchange.Worker.start_link(arg1, arg2, arg3)
-      # worker(ElixirExchange.Worker, [arg1, arg2, arg3]),
+
+      worker(ElixirExchange.GraphCache, []),
+      #worker(ElixirExchange.OrderCache, []),
+      worker(ElixirExchange.Cron, [[
+        %{
+          module: ElixirExchange.GraphData,
+          function: :store_latest_trade_data,
+          params: [],
+          interval: 3000
+        }
+      ]]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -13,8 +13,10 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 
 ## Learn more
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+This is intended to be a generic trading platform- geared toward cryptocurrency, but useable for anything by plugging in various trading modules.  Contributions welcome
+
+This is a work in progress and produces random dummy data for the candlestic graph, and has the other elements on the page hardcoded for now.
+
+## Screenshot
+
+![screenshot](https://raw.githubusercontent.com/dania02525/elixir_trading_platform/master/screencap.png)
