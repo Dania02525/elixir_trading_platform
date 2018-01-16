@@ -14,7 +14,7 @@ defmodule ElixirExchange.Application do
       supervisor(ElixirExchangeWeb.Endpoint, []),
 
       worker(ElixirExchange.GraphCache, []),
-      #worker(ElixirExchange.OrderCache, []),
+      worker(ElixirExchange.OrderCache, []),
       worker(ElixirExchange.Cron, [[
         %{
           module: ElixirExchange.GraphData,

@@ -12,7 +12,7 @@
     <script src="http://techanjs.org/techan.min.js"></script>
   </head>
 
-  <body>
+  <body data-js-view-name="<%= js_view_name(@conn, @view_template) %>">
     <main role="main">
       <%= render @view_module, @view_template, assigns %>
     </main>

@@ -1,15 +1,11 @@
 defmodule ElixirExchange.GraphData do
-  require Logger
-
   def query_history(pair) do
     # query the trade history for this pair
-    Logger.debug "> caching trade history"
     ElixirExchange.FakeGraphData.gen_fake_history(150)
   end
 
   # this should be done each minute
   def store_latest_trade_data do
-    Logger.debug "> storing trade datapoint"
     # calculate latest trade data from orders
     Application.fetch_env!(:elixir_exchange, :pairs)
     |> Enum.each(fn(pair)->
@@ -25,7 +21,6 @@ defmodule ElixirExchange.GraphData do
   end
 
   defp broadcast_new_datapoint(pair, data) do
-    Logger.debug "> broadcasting trade datapoint"
-    ElixirExchangeWeb.Endpoint.broadcast("trading:#{pair}", "update", %{data: data})
+    ElixirExchangeWeb.Endpoint.broadcast("trading:#{pair}", "update_graph", %{graph_data: data})
   end
 end

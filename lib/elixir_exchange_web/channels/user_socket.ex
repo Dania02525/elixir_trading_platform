@@ -21,7 +21,19 @@ defmodule ElixirExchangeWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
+
+  def connect(%{"token" => token}, socket) do
+    # max_age: 1209600 is equivalent to two weeks in seconds
+    case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
+      {:ok, user_id} ->
+        {:ok, assign(socket, :current_user, user_id)}
+      {:error, reason} ->
+        :error
+    end
+  end
+
+  # unauthenticated
+  def connect(_any, socket) do
     {:ok, socket}
   end
 
