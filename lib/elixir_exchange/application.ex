@@ -13,8 +13,8 @@ defmodule ElixirExchange.Application do
       # Start the endpoint when the application starts
       supervisor(ElixirExchangeWeb.Endpoint, []),
 
+      supervisor(ElixirExchange.OrderSupervisor, []),
       worker(ElixirExchange.GraphCache, []),
-      worker(ElixirExchange.OrderCache, []),
       worker(ElixirExchange.Cron, [[
         %{
           module: ElixirExchange.GraphData,

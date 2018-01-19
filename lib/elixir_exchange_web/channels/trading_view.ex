@@ -1,6 +1,7 @@
 defmodule ElixirExchangeWeb.TradingView do
   use Phoenix.Channel
   require Logger
+  import ElixirExchange.FormatHelpers
 
   def join("trading:" <> pair, _message, socket) do
     if Enum.member?(Application.fetch_env!(:elixir_exchange, :pairs), pair) do
@@ -17,8 +18,8 @@ defmodule ElixirExchangeWeb.TradingView do
       market_price: ElixirExchange.OrderData.market_price(pair),
       graph_data: ElixirExchange.GraphData.cached_history(pair),
       order_data: %{
-        buys: collapse_orders(ElixirExchange.OrderData.cached_buy_orders(pair)),
-        sells: collapse_orders(ElixirExchange.OrderData.cached_sell_orders(pair)),
+        buys: collapse_orders(ElixirExchange.OrderServer.buy_orders(pair)),
+        sells: collapse_orders(ElixirExchange.OrderServer.sell_orders(pair)),
         my_orders: my_orders(socket, pair)
       }
     }
@@ -28,28 +29,6 @@ defmodule ElixirExchangeWeb.TradingView do
   def terminate(reason, _socket) do
     Logger.debug"> leave #{inspect reason}"
     :ok
-  end
-
-  defp collapse_orders(orders) do
-    Enum.reduce(orders, %{}, fn(o, acc)->
-      existing = Map.get(acc, o.price)
-      if existing do
-        order = %{
-          price: o.price,
-          quantity: existing.quantity + o.unfilled_quantity
-        }
-        Map.put(acc, o.price, order)
-      else
-        order = %{
-            price: o.price,
-            quantity: o.unfilled_quantity
-          }
-        Map.put(acc, o.price, order)
-      end
-    end)
-    |> Enum.map(fn {_k, v}->
-      v
-    end)
   end
 
   defp my_orders(socket, pair) do
